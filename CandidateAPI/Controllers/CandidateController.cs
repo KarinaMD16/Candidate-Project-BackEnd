@@ -18,12 +18,12 @@ namespace CandidateAPI.Controllers
         }
 
         // GET: api/<CandidateController>
-        [HttpGet("me")]
+        [HttpGet("perfil")]
         [Authorize(Roles = "Candidato")]
         public async Task<IActionResult> GetProfile()
         {
-            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!int.TryParse(userIdStr, out var userId)) return Unauthorized(); 
+            var userIdfind = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdfind, out var userId)) return Unauthorized(); 
 
             var userProfile = await _candidateService.GetUserProfile(userId);
             if (userProfile == null) return NotFound();

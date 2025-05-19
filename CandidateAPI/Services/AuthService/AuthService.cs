@@ -23,32 +23,32 @@ namespace CandidateAPI.Services.AuthService;
             _context = context;
         }
 
-    public string GenerateToken(Candidato candidato)
-    {
-        if (candidato == null || candidato.Id == 0 || string.IsNullOrWhiteSpace(candidato.CorreoElectronico) || string.IsNullOrWhiteSpace(candidato.Role))
-            throw new ArgumentException("Candidato inválido al generar token");
-
-        var claims = new[]
+        public string GenerateToken(Candidato candidato)
         {
-        new Claim(JwtRegisteredClaimNames.Sub, candidato.CorreoElectronico),
-        new Claim(ClaimTypes.NameIdentifier, candidato.Id.ToString()),
-        new Claim(ClaimTypes.Role, candidato.Role),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-    };
+            if (candidato == null || candidato.Id == 0 || string.IsNullOrWhiteSpace(candidato.CorreoElectronico) || string.IsNullOrWhiteSpace(candidato.Role))
+                throw new ArgumentException("Candidato inválido al generar token");
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_super_secret_key_your_super_secret_key"));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+            new Claim(ClaimTypes.NameIdentifier, candidato.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Sub, candidato.CorreoElectronico),
+            new Claim(ClaimTypes.Role, candidato.Role),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
 
-        var token = new JwtSecurityToken(
-            issuer: "yourdomain.com",
-            audience: "yourdomain.com",
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(30),
-            signingCredentials: creds
-        );
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_super_secret_key_your_super_secret_key"));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
+            var token = new JwtSecurityToken(
+                issuer: "yourdomain.com",
+                audience: "yourdomain.com",
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
 
 
 
@@ -57,7 +57,6 @@ namespace CandidateAPI.Services.AuthService;
             var user = _context.Candidatos.FirstOrDefault(x => x.CorreoElectronico == email && x.Password == password);
             if (user != null)
             {
-            user.Role = "Candidato";
                 return user;
             }
             else

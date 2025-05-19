@@ -24,16 +24,21 @@ namespace CandidateAPI.Services.CandidateService
             {
                 throw new ArgumentException("Los campos no pueden estar vacíos");
             }
+            if (_context.Candidatos.Any(x => x.CorreoElectronico == candidato.CorreoElectronico))
+            {
+                throw new ArgumentException("El correo ya está registrado");
+            }
+
+     
             else
             {
                 Candidato newCandidato = new Candidato();
-                newCandidato.Id = 0;
                 newCandidato.Nombre = candidato.Nombre;
                 newCandidato.Apellido = candidato.Apellido;
                 newCandidato.CorreoElectronico = candidato.CorreoElectronico;
                 newCandidato.Password = candidato.Password;
                 newCandidato.Habilidades = Array.Empty<string>();
-                newCandidato.Role = "";
+                newCandidato.Role = "Candidato";
 
                 _context.Candidatos.Add(newCandidato);
                 _context.SaveChanges();
