@@ -43,7 +43,7 @@ namespace CandidateAPI.Services.AuthService;
                 issuer: "yourdomain.com",
                 audience: "yourdomain.com",
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(5),
                 signingCredentials: creds
             );
 
