@@ -5,9 +5,7 @@ namespace CandidateAPI.Services.CandidateService
 {
     public interface ICandidateService
     {
-        public Candidato AddCandidato(Candidato candidato);
-        public List<Candidato> GetCandidatos();
-
-
+        public Candidato AddCandidato(RegisterCandidato candidato);
+        public Task<DTOCandidato> GetUserProfile(int userId); 
     }
 }

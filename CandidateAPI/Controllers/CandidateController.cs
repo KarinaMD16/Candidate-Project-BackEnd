@@ -1,6 +1,8 @@
 ﻿using CandidateAPI.Entities;
 using CandidateAPI.Services.CandidateService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 
 namespace CandidateAPI.Controllers
@@ -14,21 +16,27 @@ namespace CandidateAPI.Controllers
         {
             _candidateService = candidateService;
         }
-        // GET: api/<CandidateController>
 
-        [HttpGet]
-        public IEnumerable<Candidato> Get()
+        // GET: api/<CandidateController>
+        [HttpGet("me")]
+        [Authorize(Roles = "Candidato")]
+        public async Task<IActionResult> GetProfile()
         {
-            return _candidateService.GetCandidatos();
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdStr, out var userId)) return Unauthorized(); 
+
+            var userProfile = await _candidateService.GetUserProfile(userId);
+            if (userProfile == null) return NotFound();
+
+            return Ok(userProfile);
+
         }
 
         // POST api/<CandidateController>
         [HttpPost]
-        public Candidato Post([FromBody] Candidato candidato)
+        public Candidato Post([FromBody] RegisterCandidato candidato)
         {
-           return _candidateService.AddCandidato(candidato);
-      
+            return _candidateService.AddCandidato(candidato);
         }
-
     }
 }
