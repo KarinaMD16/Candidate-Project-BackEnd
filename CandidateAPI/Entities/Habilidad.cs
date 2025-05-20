@@ -4,5 +4,5 @@ public class Habilidad
 
     public string Nombre { get; set; }
 
-    public ICollection<OfertaHabilidad> OfertaHabilidades { get; set; }
+    public List<OfertaHabilidad> OfertaHabilidades { get; set; }
 }

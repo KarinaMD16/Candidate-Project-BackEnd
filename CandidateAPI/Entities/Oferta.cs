@@ -10,5 +10,5 @@ public class Oferta
 
     public Empresa Empresa { get; set; }
 
-    public ICollection<OfertaHabilidad> OfertaHabilidades { get; set; }
+    public List<OfertaHabilidad> OfertaHabilidades { get; set; }
 }
