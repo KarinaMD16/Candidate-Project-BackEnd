@@ -38,5 +38,12 @@ namespace CandidateAPI.Controllers
         {
             return _candidateService.AddCandidato(candidato);
         }
+        [HttpGet("find")]
+        public async Task<bool> GetUserbyemail(string email)
+        {
+            var userExists = await _candidateService.getUserbyemail(email);
+            return userExists;
+        }
+
     }
 }

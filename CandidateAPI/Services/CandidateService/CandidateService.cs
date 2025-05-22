@@ -24,10 +24,6 @@ namespace CandidateAPI.Services.CandidateService
             {
                 throw new ArgumentException("Los campos no pueden estar vacíos");
             }
-            if (_context.Candidatos.Any(x => x.CorreoElectronico == candidato.CorreoElectronico))
-            {
-                throw new ArgumentException("El correo ya está registrado");
-            }
 
      
             else
@@ -59,5 +55,13 @@ namespace CandidateAPI.Services.CandidateService
                 Habilidades = user.Habilidades 
             };
         }
+        public async Task<bool> getUserbyemail(string email)
+        {
+            var user = await _context.Candidatos.FirstOrDefaultAsync(c => c.CorreoElectronico == email);
+            if (user == null) return false;
+
+            return true;
+        }
+
     }
 }

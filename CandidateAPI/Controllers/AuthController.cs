@@ -23,6 +23,7 @@ namespace CandidateAPI.Controllers
 
             if (candidato == null)
                 return Unauthorized("Credenciales inválidas");
+            
 
             // 2. Generar el token JWT
             var token = _AuthService.GenerateToken(candidato);
