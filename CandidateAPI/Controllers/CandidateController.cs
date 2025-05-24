@@ -34,7 +34,7 @@ namespace CandidateAPI.Controllers
 
         // POST api/<CandidateController>
         [HttpPost]
-        public Candidato Post([FromBody] RegisterCandidato candidato)
+        public Candidato Post([FromBody] RegisterRequest candidato)
         {
             return _candidateService.AddCandidato(candidato);
         }

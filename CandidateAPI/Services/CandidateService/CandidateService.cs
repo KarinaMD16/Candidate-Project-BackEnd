@@ -5,6 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using CandidateAPI.DTOs;
 
 
 namespace CandidateAPI.Services.CandidateService
@@ -17,7 +18,7 @@ namespace CandidateAPI.Services.CandidateService
             _context = context;
         }
 
-        public Candidato AddCandidato(RegisterCandidato candidato)
+        public Candidato AddCandidato(RegisterRequest candidato)
         {
             // Validar el candidato 
             if (string.IsNullOrEmpty(candidato.Nombre) || string.IsNullOrEmpty(candidato.Apellido) || string.IsNullOrEmpty(candidato.CorreoElectronico) || string.IsNullOrEmpty(candidato.Password))
@@ -42,12 +43,12 @@ namespace CandidateAPI.Services.CandidateService
             } 
         }
 
-        public async Task<DTOCandidato?> GetUserProfile(int userId)
+        public async Task<CandidatoDTO?> GetUserProfile(int userId)
         {
             var user = await _context.Candidatos.FindAsync(userId);
             if (user == null) return null;
 
-            return new DTOCandidato
+            return new CandidatoDTO
             {
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,
