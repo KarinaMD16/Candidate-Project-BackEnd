@@ -1,5 +1,6 @@
 using CandidateAPI.DTOs;
 using CandidateAPI.JWTDataBase;
+using CandidateAPI.Services.Ofertas;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,55 +8,48 @@ using Microsoft.EntityFrameworkCore;
 [Route("api/[controller]")]
 public class OfertasController : ControllerBase
 {
-    private readonly JWTDbContext _context;
+    private readonly IOfertaService _ofertaService;
 
-    public OfertasController(JWTDbContext context)
+    public OfertasController(IOfertaService ofertaService)
     {
-        _context = context;
+        _ofertaService = ofertaService;
     }
 
-    [HttpPost]
+    [HttpPost("crear")]
     public async Task<IActionResult> CrearOferta([FromBody] CrearOfertaDTO dto)
     {
-        // se verifica que la empresa exista
-        var empresa = await _context.Empresas.FindAsync(dto.EmpresaId);
-        if (empresa == null)
+        try
         {
-            return NotFound("Empresa no encontrada");
+            var nuevaOferta = await _ofertaService.CrearOfertaAsync(dto);
+            return Ok(nuevaOferta);
         }
-
-        // creamos la oferta
-        var oferta = new Oferta
+        catch (KeyNotFoundException ex)
         {
-            Puesto = dto.Puesto,
-            Descripcion = dto.Descripcion,
-            EmpresaId = dto.EmpresaId
-        };
-
-        // agregamos la oferta a la base de datos para obtener su id
-        _context.Ofertas.Add(oferta);
-        await _context.SaveChangesAsync();
-
-        // asociamos las habilidades seleccionadas
-        foreach (var habilidadId in dto.HabilidadesIds)
-        {
-            var habilidadExiste = await _context.Habilidades.AnyAsync(h => h.Id == habilidadId);
-            if (!habilidadExiste)
-            {
-                return BadRequest($"La habilidad con ID {habilidadId} no existe");
-            }
-
-            var ofertaHabilidad = new OfertaHabilidad
-            {
-                OfertaId = oferta.Id,
-                HabilidadId = habilidadId
-            };
-
-            _context.OfertaHabilidades.Add(ofertaHabilidad);
+            return NotFound(new { mensaje = ex.Message });
         }
-
-        await _context.SaveChangesAsync();
-
-        return Ok(new { mensaje = "Oferta creada exitosamente", oferta.Id });
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { mensaje = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            // Para errores no controlados
+            return StatusCode(500, new { mensaje = "Error interno del servidor", detalle = ex.Message });
+        }
     }
+
+    [HttpGet]
+    public ActionResult<List<OfertaDto>> Get()
+    {
+        var ofertas = _ofertaService.GetOfertasConHabilidades();
+        return Ok(ofertas);
+    }
+
+    [HttpGet("candidato/{id}/ofertas")]
+    public IActionResult GetOfertasPorCandidato(int id)
+    {
+        var ofertas = _ofertaService.GetOfertasPorCandidato(id);
+        return Ok(ofertas);
+    }
+
 }

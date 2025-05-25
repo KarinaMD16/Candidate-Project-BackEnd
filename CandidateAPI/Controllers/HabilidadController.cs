@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CandidateAPI.JWTDataBase;
+using CandidateAPI.DTOs;
+using CandidateAPI.Services.Habilidades;
 
 namespace CandidateAPI.Controllers
 {
@@ -7,18 +9,17 @@ namespace CandidateAPI.Controllers
     [Route("api/[controller]")]
     public class HabilidadController : ControllerBase
     {
-        private readonly JWTDbContext _context;
+        private readonly IHabilidadesService _habilidadaService;
 
-        public HabilidadController(JWTDbContext context)
+        public HabilidadController(IHabilidadesService habilidadesService)
         {
-            _context = context;
+            _habilidadaService = habilidadesService;
         }
 
         [HttpGet]
-        public IActionResult GetHabilidades()
+        public ActionResult<IEnumerable<HabilidadDto>> ObtenerTodos()
         {
-            var habilidades = _context.Habilidades.ToList();
-            return Ok(habilidades);
+            return Ok(_habilidadaService.GetTodasHabilidades());
         }
     }
 }

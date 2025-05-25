@@ -1,4 +1,6 @@
+using CandidateAPI.DTOs;
 using CandidateAPI.JWTDataBase;
+using CandidateAPI.Services.Empresas;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CandidateAPI.Controllers
@@ -7,25 +9,21 @@ namespace CandidateAPI.Controllers
     [Route("api/[controller]")]
     public class EmpresaController : ControllerBase
     {
-        private readonly JWTDbContext _context;
+        private readonly IEmpresaService _service;
 
-        public EmpresaController(JWTDbContext context)
+        public EmpresaController(IEmpresaService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpPost]
-        public IActionResult CrearEmpresa([FromBody] Empresa empresa)
+        public async Task<IActionResult> CrearEmpresa([FromBody] CrearEmpresaDto dto)
         {
-            if (empresa == null || string.IsNullOrEmpty(empresa.Nombre))
-            {
-                return BadRequest("Datos de empresa inválidos.");
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            _context.Empresas.Add(empresa);
-            _context.SaveChanges();
-
-            return Ok(empresa);
+            var resulatdo = await _service.crearEmpresa(dto);
+            return Ok(resulatdo);
         }
     }
 }

@@ -5,4 +5,4 @@ public class CrearOfertaDTO
     public string Descripcion { get; set; }
     public int EmpresaId { get; set; }
     public List<int> HabilidadesIds { get; set; }
-}
+}   

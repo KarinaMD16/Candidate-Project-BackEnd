@@ -1,3 +1,5 @@
+using CandidateAPI.Entities;
+
 public class Oferta
 {
     public int Id { get; set; }
@@ -11,4 +13,7 @@ public class Oferta
     public Empresa Empresa { get; set; }
 
     public List<OfertaHabilidad> OfertaHabilidades { get; set; }
+
+    public ICollection<Candidato> CandidatosPostulados { get; set; }
+
 }

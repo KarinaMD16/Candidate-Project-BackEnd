@@ -1,3 +1,4 @@
+using CandidateAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CandidateAPI.JWTDataBase
@@ -28,6 +29,15 @@ namespace CandidateAPI.JWTDataBase
             );
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Candidato>()
+                .HasMany(c => c.Habilidades)
+                .WithMany(h => h.Candidatos);
+
+            modelBuilder.Entity<Oferta>()
+                .HasMany(c => c.CandidatosPostulados)
+                .WithMany(h => h.OfertasAplicadas);
+
         }
 
         // DbSets
@@ -35,5 +45,6 @@ namespace CandidateAPI.JWTDataBase
         public DbSet<Oferta> Ofertas { get; set; }
         public DbSet<Habilidad> Habilidades { get; set; }
         public DbSet<OfertaHabilidad> OfertaHabilidades { get; set; }
+        public DbSet<Candidato> Candidatos { get; set; }
     }
 }
