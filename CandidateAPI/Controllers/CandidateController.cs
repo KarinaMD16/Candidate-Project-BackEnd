@@ -79,6 +79,16 @@ namespace CandidateAPI.Controllers
             return Ok(ofertas);
         }
 
+        public async Task<IActionResult> EliminarHabilidad(int candidatoId, int habilidadId)
+        {
+            var result = await _candidateService.EliminarHabilidadDeCandidato(candidatoId, habilidadId);
+
+            if (!result)
+                return NotFound("El candidato o la habilidad no fueron encontrados.");
+
+            return NoContent();
+        }
+
 
     }
 }

@@ -83,7 +83,6 @@ namespace CandidateAPI.Services.Ofertas
             // 1. Obtener IDs de habilidades del candidato
             var habilidadesCandidato = _context.Candidatos
                 .Include(c => c.Habilidades)
-                .Include(c => c.Habilidades)
                 .Where(c => c.Id == candidatoId)
                 .SelectMany(c => c.Habilidades.Select(h => h.Id))
                 .ToList();
@@ -103,7 +102,8 @@ namespace CandidateAPI.Services.Ofertas
                     Habilidades = o.OfertaHabilidades.Select(oh => new HabilidadDto
                     {
                         Id = oh.Habilidad.Id,
-                        name = oh.Habilidad.Nombre
+                        name = oh.Habilidad.Nombre,
+                        HaceMatch = habilidadesCandidato.Contains(oh.Habilidad.Id)
                     }).ToList()
                 })
                 .ToList();
