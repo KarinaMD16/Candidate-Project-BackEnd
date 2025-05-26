@@ -46,10 +46,10 @@ namespace CandidateAPI.Controllers
             return userExists;
         }
 
-        [HttpPost("/asociarHabilidad")]
-        public async Task<IActionResult> AgregarHabilidad([FromBody] AsociarHabilidadDto dto)
+        [HttpPost("asociarHabilidad")]
+        public async Task<IActionResult> AgregarHabilidad(int candidatoId, int habilidadId)
         {
-            var result = await _candidateService.AgregarHabilidadesUsuario(dto.CandidatoId, dto.HabilidadId);
+            var result = await _candidateService.AgregarHabilidadesUsuario(candidatoId, habilidadId);
 
             if (!result)
                 return NotFound("Candidato o habilidad no encontrado");
