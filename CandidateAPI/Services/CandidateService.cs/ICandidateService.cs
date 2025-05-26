@@ -16,6 +16,8 @@ namespace CandidateAPI.Services.CandidateService
 
         List<OfertaDto> ObtenerOfertasPostuladas(int candidatoId);
 
+        Task<bool> EliminarHabilidadDeCandidato(int candidatoId, int habilidadId);
+
     }
 
 }

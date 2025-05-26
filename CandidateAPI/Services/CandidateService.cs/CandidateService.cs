@@ -44,7 +44,10 @@ namespace CandidateAPI.Services.CandidateService
 
         public async Task<CandidatoDTO?> GetUserProfile(int userId)
         {
-            var user = await _context.Candidatos.FindAsync(userId);
+            var user = await _context.Candidatos
+                .Include(c => c.Habilidades)
+                .FirstOrDefaultAsync(c => c.Id == userId);
+
             if (user == null) return null;
 
             return new CandidatoDTO
@@ -53,8 +56,14 @@ namespace CandidateAPI.Services.CandidateService
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,
                 CorreoElectronico = user.CorreoElectronico,
+                Habilidades = user.Habilidades.Select(h => new HabilidadDto
+                {
+                    Id = h.Id,
+                    name = h.Nombre
+                }).ToList()
             };
         }
+
         public async Task<bool> getUserbyemail(string email)
         {
             var user = await _context.Candidatos.FirstOrDefaultAsync(c => c.CorreoElectronico == email);
@@ -110,6 +119,7 @@ namespace CandidateAPI.Services.CandidateService
         public List<OfertaDto> ObtenerOfertasPostuladas(int candidatoId)
         {
             var candidato = _context.Candidatos
+                .Include(c => c.Habilidades)
                 .Include(c => c.OfertasAplicadas)
                     .ThenInclude(o => o.Empresa)
                 .Include(c => c.OfertasAplicadas)
@@ -120,6 +130,8 @@ namespace CandidateAPI.Services.CandidateService
             if (candidato == null)
                 return new List<OfertaDto>();
 
+            var habilidadesCandidatoIds = candidato.Habilidades.Select(h => h.Id).ToHashSet();
+
             var ofertas = candidato.OfertasAplicadas.Select(o => new OfertaDto
             {
                 Id = o.Id,
@@ -129,11 +141,35 @@ namespace CandidateAPI.Services.CandidateService
                 Habilidades = o.OfertaHabilidades.Select(oh => new HabilidadDto
                 {
                     Id = oh.Habilidad.Id,
-                    name = oh.Habilidad.Nombre
+                    name = oh.Habilidad.Nombre,
+                    HaceMatch = habilidadesCandidatoIds.Contains(oh.Habilidad.Id)
+
                 }).ToList()
             }).ToList();
 
             return ofertas;
+        }
+
+        public async Task<bool> EliminarHabilidadDeCandidato(int candidatoId, int habilidadId)
+        {
+            
+            var candidato = await _context.Candidatos
+                .Include(c => c.Habilidades)
+                .FirstOrDefaultAsync(c => c.Id == candidatoId);
+
+            if (candidato == null)
+                return false; 
+
+            var habilidad = candidato.Habilidades.FirstOrDefault(h => h.Id == habilidadId);
+
+            if (habilidad == null)
+                return false; 
+
+            candidato.Habilidades.Remove(habilidad);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
 
