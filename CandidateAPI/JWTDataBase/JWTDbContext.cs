@@ -28,6 +28,14 @@ namespace CandidateAPI.JWTDataBase
                 new Habilidad { Id = 10, Nombre = "Docker" }
             );
 
+            modelBuilder.Entity<Empresa>().HasData(
+                new Empresa { Id = 1, Nombre = "Google", SitioWeb = "google.com", Correo = "google.com" },
+                new Empresa { Id = 2, Nombre = "Facebook", SitioWeb = "facebook.com", Correo = "facebook@gmail.com" },
+                new Empresa { Id = 3, Nombre = "Intelec", SitioWeb = "intelec.com", Correo = "intelec@gmail.com" },
+                new Empresa { Id = 4, Nombre = "Intel", SitioWeb = "intel.com", Correo = "intel@gmail.com" },
+                new Empresa { Id = 5, Nombre = "Gollo", SitioWeb = "gollo.com", Correo = "gollo@gmail.com" },
+                new Empresa { Id = 6, Nombre = "Monge", SitioWeb = "monge.com", Correo = "monge@gmail.com" }
+);
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Candidato>()

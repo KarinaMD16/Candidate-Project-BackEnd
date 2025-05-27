@@ -1,4 +1,5 @@
 ﻿using CandidateAPI.DTOs;
+using CandidateAPI.Entities;
 using CandidateAPI.JWTDataBase;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,6 +56,8 @@ namespace CandidateAPI.Services.Ofertas
 
         public List<OfertaDto> GetOfertasConHabilidades()
         {
+            
+
             var ofertas = _context.Ofertas
                 .Include(o => o.Empresa)
                 .Include(o => o.OfertaHabilidades)
@@ -103,7 +106,8 @@ namespace CandidateAPI.Services.Ofertas
                     Habilidades = o.OfertaHabilidades.Select(oh => new HabilidadDto
                     {
                         Id = oh.Habilidad.Id,
-                        name = oh.Habilidad.Nombre
+                        name = oh.Habilidad.Nombre,
+                        HaceMatch = habilidadesCandidato.Contains(oh.Habilidad.Id)
                     }).ToList()
                 })
                 .ToList();
