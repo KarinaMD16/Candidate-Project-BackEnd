@@ -172,5 +172,27 @@ namespace CandidateAPI.Services.CandidateService
             return true;
         }
 
+        public async Task<bool> EliminarOfertaCandidato(int candidatoId, int ofertaid)
+        {
+
+            var candidato = await _context.Candidatos
+                .Include(c => c.OfertasAplicadas)
+                .FirstOrDefaultAsync(c => c.Id == candidatoId);
+
+            if (candidato == null)
+                return false;
+
+            var oferta = candidato.OfertasAplicadas.FirstOrDefault(h => h.Id == ofertaid);
+
+            if (oferta == null)
+                return false;
+
+            candidato.OfertasAplicadas.Remove(oferta);
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
     }
 }
