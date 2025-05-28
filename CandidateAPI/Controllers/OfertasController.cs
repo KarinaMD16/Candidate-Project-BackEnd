@@ -1,6 +1,7 @@
 using CandidateAPI.DTOs;
 using CandidateAPI.JWTDataBase;
 using CandidateAPI.Services.Ofertas;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -46,6 +47,7 @@ public class OfertasController : ControllerBase
     }
 
     [HttpGet("candidato/{id}/ofertas")]
+    [Authorize(Roles = "Candidato")]
     public IActionResult GetOfertasPorCandidato(int id)
     {
         var ofertas = _ofertaService.GetOfertasPorCandidato(id);
