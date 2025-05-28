@@ -58,6 +58,7 @@ namespace CandidateAPI.Controllers
         }
 
         [HttpPost("postular")]
+        [Authorize(Roles = "Candidato")]
         public IActionResult PostularACandidatura([FromBody] PostulacionDto dto)
         {
             var resultado = _candidateService.PostularACandidatura(dto.CandidatoId, dto.OfertaId);
@@ -69,6 +70,7 @@ namespace CandidateAPI.Controllers
         }
 
         [HttpGet("{candidatoId}/postulaciones")]
+        [Authorize(Roles = "Candidato")]
         public IActionResult GetOfertasPostuladas(int candidatoId)
         {
             var ofertas = _candidateService.ObtenerOfertasPostuladas(candidatoId);
@@ -80,6 +82,7 @@ namespace CandidateAPI.Controllers
         }
 
         [HttpDelete("{candidatoId}/eliminarHabilidad/{habilidadId}")]
+        [Authorize(Roles = "Candidato")]
         public async Task<IActionResult> EliminarHabilidad(int candidatoId, int habilidadId)
         {
             var result = await _candidateService.EliminarHabilidadDeCandidato(candidatoId, habilidadId);
