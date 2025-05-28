@@ -47,6 +47,7 @@ namespace CandidateAPI.Controllers
         }
 
         [HttpPost("asociarHabilidad")]
+        [Authorize(Roles = "Candidato")]
         public async Task<IActionResult> AgregarHabilidad(int candidatoId, int habilidadId)
         {
             var result = await _candidateService.AgregarHabilidadesUsuario(candidatoId, habilidadId);
