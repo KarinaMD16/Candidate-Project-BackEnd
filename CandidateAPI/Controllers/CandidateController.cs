@@ -73,10 +73,8 @@ namespace CandidateAPI.Controllers
         {
             var ofertas = _candidateService.ObtenerOfertasPostuladas(candidatoId);
 
-            if (ofertas == null || !ofertas.Any())
-                return NotFound("El candidato no tiene postulaciones registradas.");
-
-            return Ok(ofertas);
+            // Devolvemos una lista vacía del mismo tipo
+            return Ok(ofertas ?? new List<OfertaDto>());
         }
 
         [HttpDelete("{candidatoId}/eliminarHabilidad/{habilidadId}")]
@@ -86,6 +84,17 @@ namespace CandidateAPI.Controllers
 
             if (!result)
                 return NotFound("El candidato o la habilidad no fueron encontrados.");
+
+            return NoContent();
+        }
+
+        [HttpDelete("{candidatoId}/eliminiarPostulacion/{ofertaId}")]
+        public async Task<IActionResult> EliminarOferta(int candidatoId, int ofertaId)
+        {
+            var result = await _candidateService.EliminarOfertaCandidato(candidatoId, ofertaId);
+
+            if (!result)
+                return NotFound("El candidato o la oferta no fueron encontrados.");
 
             return NoContent();
         }
