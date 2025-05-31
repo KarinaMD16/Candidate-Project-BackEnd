@@ -1,9 +1,11 @@
 using CandidateAPI.DTOs;
+using CandidateAPI.Entities;
 using CandidateAPI.JWTDataBase;
 using CandidateAPI.Services.Ofertas;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -50,6 +52,12 @@ public class OfertasController : ControllerBase
     [Authorize(Roles = "Candidato")]
     public IActionResult GetOfertasPorCandidato(int id)
     {
+        var userIdFromToken = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!int.TryParse(userIdFromToken, out var userId) || userId != id)
+        {
+            return Unauthorized("No tienes permiso para ver las ofertas de este candidato.");
+        }
         var ofertas = _ofertaService.GetOfertasPorCandidato(id);
         return Ok(ofertas);
     }

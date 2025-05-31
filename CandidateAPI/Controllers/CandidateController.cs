@@ -50,6 +50,13 @@ namespace CandidateAPI.Controllers
         [Authorize(Roles = "Candidato")]
         public async Task<IActionResult> AgregarHabilidad(int candidatoId, int habilidadId)
         {
+            var userIdFromToken = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(userIdFromToken, out var userId) || userId != candidatoId)
+            {
+                return Unauthorized("No tienes permiso para modificar a este candidato.");
+            }
+
             var result = await _candidateService.AgregarHabilidadesUsuario(candidatoId, habilidadId);
 
             if (!result)
@@ -62,6 +69,14 @@ namespace CandidateAPI.Controllers
         [Authorize(Roles = "Candidato")]
         public IActionResult PostularACandidatura([FromBody] PostulacionDto dto)
         {
+
+            var userIdFromToken = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(userIdFromToken, out var userId) || userId != dto.CandidatoId)
+            {
+                return Unauthorized("No tienes permiso para modificar a este candidato.");
+            }
+
             var resultado = _candidateService.PostularACandidatura(dto.CandidatoId, dto.OfertaId);
 
             if (!resultado)
@@ -74,6 +89,13 @@ namespace CandidateAPI.Controllers
         [Authorize(Roles = "Candidato")]
         public IActionResult GetOfertasPostuladas(int candidatoId)
         {
+            var userIdFromToken = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(userIdFromToken, out var userId) || userId != candidatoId)
+            {
+                return Unauthorized("No tienes permiso para ver la información de este candidato.");
+            }
+
             var ofertas = _candidateService.ObtenerOfertasPostuladas(candidatoId);
 
             // Devolvemos una lista vacía del mismo tipo
@@ -84,6 +106,14 @@ namespace CandidateAPI.Controllers
         [Authorize(Roles = "Candidato")]
         public async Task<IActionResult> EliminarHabilidad(int candidatoId, int habilidadId)
         {
+
+            var userIdFromToken = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(userIdFromToken, out var userId) || userId != candidatoId)
+            {
+                return Unauthorized("No tienes permiso para modificar a este candidato.");
+            }
+
             var result = await _candidateService.EliminarHabilidadDeCandidato(candidatoId, habilidadId);
 
             if (!result)
@@ -93,8 +123,17 @@ namespace CandidateAPI.Controllers
         }
 
         [HttpDelete("{candidatoId}/eliminiarPostulacion/{ofertaId}")]
+        [Authorize(Roles = "Candidato")]
         public async Task<IActionResult> EliminarOferta(int candidatoId, int ofertaId)
         {
+
+            var userIdFromToken = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(userIdFromToken, out var userId) || userId != candidatoId)
+            {
+                return Unauthorized("No tienes permiso para modificar a este candidato.");
+            }
+
             var result = await _candidateService.EliminarOfertaCandidato(candidatoId, ofertaId);
 
             if (!result)
