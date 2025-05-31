@@ -7,6 +7,8 @@ public class Habilidad
 
     public string Nombre { get; set; }
 
+    public string icono { get; set; }
+
     public ICollection<Candidato> Candidatos { get; set; }
     [JsonIgnore]
     public ICollection<Oferta> Ofertas { get; set; }
