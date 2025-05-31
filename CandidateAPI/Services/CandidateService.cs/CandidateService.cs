@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using CandidateAPI.DTOs;
+using System.Diagnostics.Metrics;
 
 
 namespace CandidateAPI.Services.CandidateService
@@ -138,11 +139,12 @@ namespace CandidateAPI.Services.CandidateService
                 Puesto = o.Puesto,
                 Descripcion = o.Descripcion,
                 EmpresaNombre = o.Empresa.Nombre,
+                icono = o.Empresa.icono,
                 Habilidades = o.OfertaHabilidades.Select(oh => new HabilidadDto
                 {
                     Id = oh.Habilidad.Id,
                     name = oh.Habilidad.Nombre,
-                    HaceMatch = habilidadesCandidatoIds.Contains(oh.Habilidad.Id)
+                    icono = oh.Habilidad.icono,
 
                 }).ToList()
             }).ToList();

@@ -70,10 +70,12 @@ namespace CandidateAPI.Services.Ofertas
                     Descripcion = o.Descripcion,
                     EmpresaId = o.EmpresaId,
                     EmpresaNombre = o.Empresa.Nombre,
+                    icono = o.Empresa.icono,
                     Habilidades = o.OfertaHabilidades.Select(oh => new HabilidadDto
                     {
                         Id = oh.Habilidad.Id,
-                        name = oh.Habilidad.Nombre
+                        name = oh.Habilidad.Nombre,
+                        icono = oh.Habilidad.icono
                     }).ToList()
                 })
                 .ToList();
@@ -103,11 +105,12 @@ namespace CandidateAPI.Services.Ofertas
                     Puesto = o.Puesto,
                     Descripcion = o.Descripcion,
                     EmpresaNombre = o.Empresa.Nombre,
+                    icono = o.Empresa.icono,
                     Habilidades = o.OfertaHabilidades.Select(oh => new HabilidadDto
                     {
                         Id = oh.Habilidad.Id,
                         name = oh.Habilidad.Nombre,
-                        HaceMatch = habilidadesCandidato.Contains(oh.Habilidad.Id)
+                        icono = oh.Habilidad.icono
                     }).ToList()
                 })
                 .ToList();

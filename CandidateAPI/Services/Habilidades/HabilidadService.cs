@@ -19,7 +19,8 @@ namespace CandidateAPI.Services.Habilidades
                 .Select(c => new HabilidadDto
                 {
                     Id = c.Id,
-                    name = c.Nombre
+                    name = c.Nombre,
+                    icono = c.icono
                 })
                 .ToList();
         }

@@ -7,4 +7,6 @@ public class Empresa
     public string SitioWeb { get; set; }
 
     public string Correo { get; set; }
+
+    public string icono { get; set; }
 }
